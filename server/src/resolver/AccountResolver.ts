@@ -55,7 +55,7 @@ export class AccountResolver {
         return await database.getRepository(Account).find();
     }
 
-    //@UseMiddleware(Authenticated)
+    @UseMiddleware(Authenticate)
     @Mutation(() => Account)
     async addAccount(
         @Arg("account") accountInput :AccountInput
