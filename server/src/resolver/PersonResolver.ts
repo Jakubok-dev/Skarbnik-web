@@ -6,7 +6,10 @@ import { UserInputError } from "apollo-server-express";
 import { Organisation } from "../entity/Organisation";
 import { AppContext } from "../types";
 import { Permission } from "../permissions/Permission";
-import { AuthorisationError } from "src/error/AuthorisationError";
+import { AuthorisationError } from "../error/AuthorisationError";
+import { Account } from "../entity/Account";
+import { AuthorisationPack, CreateServereDataPack, RemoveServereDataPack, SeeDataPack, UpdateServereDataPack } from "../permissions/AuthorisationPacks";
+import { EVERYONE, GROUP, ORGANISATION, OWN } from "../global";
 
 @InputType()
 class PersonInput {
@@ -30,6 +33,47 @@ class PersonUpdateInput {
     surname ?:string;
     @Field({nullable: true})
     dateOfBirth ?:string;
+}
+
+
+
+const authorise = async (
+    account :Account,
+    person :Person,
+    authorisationPack :AuthorisationPack
+) => {
+
+    if (account!.permissionsManager.hasPermission(authorisationPack.everyone)) 
+        return EVERYONE;
+
+    if (
+        account!.permissionsManager.hasPermission(authorisationPack.organisation) 
+        && 
+        (await person.organisation).id !== (await account!.person.organisation).id
+    )
+        throw new AuthorisationError();
+    else if (account!.permissionsManager.hasPermission(authorisationPack.organisation))
+        return ORGANISATION;
+
+    if (
+        account!.permissionsManager.hasPermission(authorisationPack.group)
+        && 
+        (await person.groups).filter(async el => el.id === (await account?.group)?.id).length === 0
+    )
+        throw new AuthorisationError();
+    else if (account!.permissionsManager.hasPermission(authorisationPack.group))
+        return GROUP;
+    
+    if (
+        account!.permissionsManager.hasPermission(authorisationPack.own)
+        &&
+        person.id !== account?.person.id
+    )
+        throw new AuthorisationError();
+    else if (account!.permissionsManager.hasPermission(authorisationPack.own))
+        return OWN;
+    
+    throw new AuthorisationError();
 }
 
 @Resolver(Person)
@@ -74,33 +118,9 @@ export class PersonResolver {
                 argumentName: "id"
             });
         
-        if (account!.permissionsManager.hasPermission(Permission.SEE_EVERYONES_DATA))
-            return person;
+        authorise(account!, person, new SeeDataPack())
 
-        if (account!.permissionsManager.hasPermission(Permission.SEE_PEOPLES_IN_THE_SAME_ORGANISATION_DATA)) {
-            
-            if ((await person.organisation).id !== (await account!.person.organisation).id)
-                throw new AuthorisationError();
-            
-            return person;
-        }
-
-        if (account!.permissionsManager.hasPermission(Permission.SEE_GROUPMATES_DATA)) {
-
-            if ((await (await account!.group!).people).filter(el => el.id === person.id).length === 0)
-                throw new AuthorisationError();
-
-            return person;
-        }
-
-        if (account!.permissionsManager.hasPermission(Permission.SEE_OWN_DATA)) {
-            if (account?.person.id !== person.id)
-                throw new AuthorisationError();
-
-            return person;
-        }
-
-        throw new AuthorisationError();
+        return person;
     }
 
     @UseMiddleware(Authenticate)
@@ -120,11 +140,10 @@ export class PersonResolver {
         }
 
         const organisation = await database.getRepository(Organisation).findOne(personInput.organisation);
-        if (!organisation) {
+        if (!organisation)
             throw new UserInputError(`Object not found`, {
                 argumentName: "person.organisation"
             });
-        }
 
         const person = Person.create({ 
             name: personInput.name,
@@ -133,24 +152,7 @@ export class PersonResolver {
         });
         person.organisation = organisation.toPromise()
 
-        if (account!.permissionsManager.hasPermission(Permission.CREATE_EVERYONES_SERVERE_DATA)) {}
-
-        else if (
-            account!.permissionsManager.hasPermission(Permission.CREATE_PEOPLES_IN_THE_SAME_ORGANISATION_SERVERE_DATA) 
-            && organisation!.id !== (await account!.person.organisation).id
-        )
-            throw new AuthorisationError();
-        
-        else if (account!.permissionsManager.hasPermission(Permission.CREATE_GROUPMATES_SERVERE_DATA)) {
-            person.groups = Person.toPromise([]);
-            if (!account?.group)
-                throw new UserInputError(`You are not belonging to any group`);
-            
-            (await person.groups).push(await account.group);
-        }
-
-        else 
-            throw new AuthorisationError();
+        authorise(account!, person, new CreateServereDataPack());
         
         return await person.save();
     }
@@ -167,28 +169,7 @@ export class PersonResolver {
                 argumentName: `person.id`
             });
 
-        if (account!.permissionsManager.hasPermission(Permission.UPDATE_EVERYONES_SERVERE_DATA)) {}
-        else if (
-            account!.permissionsManager.hasPermission(Permission.UPDATE_PEOPLES_IN_THE_SAME_ORGANISATION_SERVERE_DATA) 
-            && 
-            (await person.organisation).id !== (await account!.person.organisation).id
-        )
-            throw new AuthorisationError();
-        else if (
-            account!.permissionsManager.hasPermission(Permission.UPDATE_GROUPMATES_SERVERE_DATA)
-            && 
-            (await person.groups).filter(async el => el.id === (await account?.group)?.id).length === 0
-        )
-            throw new AuthorisationError();
-        else if (
-            account!.permissionsManager.hasPermission(Permission.UPDATE_OWN_SERVERE_DATA)
-            &&
-            person.id !== account?.person.id
-        )
-            throw new AuthorisationError();
-        else
-            throw new AuthorisationError();
-        
+        authorise(account!, person, new UpdateServereDataPack());
         
         if (update.name)
             person.name = update.name;
@@ -215,27 +196,7 @@ export class PersonResolver {
         if (!person)
             return false;
 
-        if (account!.permissionsManager.hasPermission(Permission.REMOVE_EVERYONES_SERVERE_DATA)) {}
-        else if (
-            account!.permissionsManager.hasPermission(Permission.REMOVE_PEOPLES_IN_THE_SAME_ORGANISATION_SERVERE_DATA) 
-            && 
-            (await person.organisation).id !== (await account!.person.organisation).id
-        )
-            throw new AuthorisationError();
-        else if (
-            account!.permissionsManager.hasPermission(Permission.REMOVE_GROUPMATES_SERVERE_DATA)
-            && 
-            (await person.groups).filter(async el => el.id === (await account?.group)?.id).length === 0
-        )
-            throw new AuthorisationError();
-        else if (
-            account!.permissionsManager.hasPermission(Permission.REMOVE_OWN_SERVERE_DATA)
-            &&
-            person.id !== account?.person.id
-        )
-            throw new AuthorisationError();
-        else
-            throw new AuthorisationError();
+        authorise(account!, person, new RemoveServereDataPack());
 
         await person.beforeRemove();
         await person.remove();

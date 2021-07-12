@@ -42,7 +42,7 @@ export class Account extends AppBaseEntity {
     })
     permissionsManager :PermissionsManager;
 
-    @Field({nullable: true})
+    @Field(() => Group, {nullable: true})
     @ManyToOne(() => Group, group => group.accounts, {
         cascade: true,
         lazy: true
