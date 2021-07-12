@@ -19,6 +19,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
+      - run: npm --prefix ./server ci
       - run: npm run --prefix ./server build
+
+      - run: npm --prefix ./web ci
       - run: npm run --prefix ./web build
