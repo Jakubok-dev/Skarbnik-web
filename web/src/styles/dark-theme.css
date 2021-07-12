@@ -1,0 +1,39 @@
+.dropdown-menu-right {
+    right:0;
+    left:auto;
+}
+
+.dropdown-menu {
+    background-color: var(--bs-dark);
+    border: 1px solid var(--bs-gray);
+}
+
+.dropdown-item {
+    color: var(--bs-light);
+}
+
+.dropdown-item:hover {
+    color: var(--bs-light);
+    background-color: var(--bs-gray-dark);
+}
+
+body {
+    background-color: var(--bs-dark);
+    color: var(--bs-light);
+}
+
+.form-body {
+    background-color: var(--bs-gray-dark);
+    border-radius: 10px;
+}
+
+.form-control {
+    background-color: var(--bs-dark);
+    border: 1px solid var(--bs-gray);
+    color: var(--bs-white);
+}
+
+.form-control:focus {
+    background-color: var(--bs-dark);
+    color: var(--bs-white);
+}
