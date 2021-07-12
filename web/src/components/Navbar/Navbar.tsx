@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import { FC } from 'react';
 import './Navbar.css';
 import { Navbar as BootstrapNavbar } from 'react-bootstrap';

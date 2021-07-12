@@ -15,7 +15,7 @@ const LogIn = () => {
   useEffect(() => {
     if (data?.me)
       history.push('/');
-  }, [data]);
+  }, [data, history]);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

@@ -62,7 +62,7 @@ function App() {
     }
 
     setCookie(`darkMode`, darkMode, { maxAge: 31556926 /* a 1 year */ });
-  }, [darkMode]);
+  }, [darkMode, setCookie]);
 
   const darkModeToggle = () => setDarkMode(!darkMode);
 
