@@ -9,6 +9,8 @@ declare namespace NodeJS {
         LOCAL_IP_ADRESSES_ARE_CORS_ORIGINS :string,
         ARE_LOCAL_IP_ADRESSES_HTTPS :string,
         
-        TOKEN_SECRET_MAX_AGE :string
+        TOKEN_SECRET_MAX_AGE :string,
+
+        TEST_MODE :string,
     }
 }

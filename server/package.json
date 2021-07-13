@@ -7,7 +7,9 @@
   "scripts": {
     "start": "tsc && node dist/app.js",
     "start2": "ts-node src/app.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "testLinux": "tsc && TEST_MODE=true node dist/app.js",
+    "testWindows": "tsc && set TEST_MODE=true && node dist/app.js"
   },
   "author": "Jakub Siek",
   "license": "CC-BY-4.0",

@@ -71,7 +71,54 @@ const main = async () => {
 
     apolloserver.applyMiddleware({ app: expressserver, cors: false });
 }
-main();
+
+const testMain = async () => {
+    applogger = new Logger("app/server", new LoggingManager());
+
+    // database = await createConnection();
+    // await seedDatabase();
+
+    initTokenGeneration();
+
+    expressserver.listen(process.env.PORT || 4000, () => {
+        applogger.log(`Listening at ${process.env.PORT||4000}`);
+    });
+    expressserver.use(cors({
+        origin: getCorsOrigins(),
+        credentials: true
+    }));
+
+    expressserver.use(cookieParser());
+
+    apolloserver = new ApolloServer({
+        schema: await buildSchema({
+            resolvers: [AResolver, AccountResolver, LogInResolver, PersonResolver, PermissionsManagerResolver, OrganisationResolver, GroupResolver]
+        }),
+        context: async ({ req, res }) => {
+            
+            const encryptedtoken = req.cookies[AUTHORISATION];
+
+            let token :AppToken;
+            try {
+                token = jwt.verify(encryptedtoken as string, tokenSecret) as AppToken;
+                
+                token.userID;
+            } catch(err) {
+                token = new AppToken();
+            }
+
+            return {
+                req,
+                res,
+                token,
+            }
+        }
+    });
+
+    apolloserver.applyMiddleware({ app: expressserver, cors: false });
+
+    process.exit(0);
+}
 
 @Resolver()
 class AResolver {
@@ -80,3 +127,5 @@ class AResolver {
         return "pong!";
     }
 }
+
+process.env.TEST_MODE?.trim() === 'true' ? testMain() : main();
