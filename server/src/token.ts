@@ -20,7 +20,7 @@ export const initTokenGeneration = () => {
 
     logger = fromLogger(applogger, `token`);
 
-    const intervalTime = ms(process.env.TOKEN_SECRET_MAX_AGE) || ms(`7d`);
+    const intervalTime = ms(process.env.TOKEN_SECRET_MAX_AGE || `7d`);
 
     if (intervalTime === ms(`7d`))
         logger.log(`The token secret max age is set to 7d.`);

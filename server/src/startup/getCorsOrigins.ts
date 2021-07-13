@@ -7,7 +7,7 @@ export const getCorsOrigins = () => {
     const logger = fromLogger(applogger, `getCorsOrigins`);
 
     const origins :string[] = [];
-    const originport = process.env.CORS_ORIGIN_PORT;
+    const originport = process.env.CORS_ORIGIN_PORT || 3000;
 
     const localhostprotocol = process.env.IS_LOCALHOST_HTTPS === 'true' ? "https" : "http";
     const localIPsprotocol = process.env.ARE_LOCAL_IP_ADRESSES_HTTPS === 'true' ? "https" : "http";
