@@ -1,5 +1,5 @@
 {
-  "name": "skarbnik-server",
+  "name": "skarbnik-teapot",
   "version": "1.0.0",
   "description": "",
   "main": "src/app.ts",
@@ -11,8 +11,16 @@
     "testLinux": "tsc && TEST_MODE=true node dist/app.js",
     "testWindows": "tsc && set TEST_MODE=true && node dist/app.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jakubok-dev/Skarbnik-web.git"
+  },
   "author": "Jakub Siek",
-  "license": "CC-BY-4.0",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Jakubok-dev/Skarbnik-web/issues"
+  },
+  "homepage": "https://github.com/Jakubok-dev/Skarbnik-web#readme",
   "dependencies": {
     "@types/node": "^15.12.5",
     "apollo-server-express": "^2.25.2",

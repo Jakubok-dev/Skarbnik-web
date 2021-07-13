@@ -1,0 +1,20 @@
+{
+  "name": "skarbnik",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "startserver": "npm run --prefix ./server start",
+    "startweb": "npm run --prefix ./web start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jakubok-dev/Skarbnik-web.git"
+  },
+  "author": "Jakub Siek",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Jakubok-dev/Skarbnik-web/issues"
+  },
+  "homepage": "https://github.com/Jakubok-dev/Skarbnik-web#readme"
+}

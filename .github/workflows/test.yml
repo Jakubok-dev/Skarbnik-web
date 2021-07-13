@@ -15,8 +15,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '16.x'
-      - run: npm --prefix ./server ci
-      - run: npm run --prefix ./server testLinux
+      - run: npm --prefix ./teapot ci
+      - run: npm run --prefix ./teapot testLinux
 
-      - run: npm --prefix ./web ci
-      - run: npm run --prefix ./web build
+      - run: npm --prefix ./depth ci
+      - run: npm run --prefix ./depth build

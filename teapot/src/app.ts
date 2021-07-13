@@ -28,6 +28,7 @@ export let apolloserver :ApolloServer;
 const main = async () => {
 
     applogger = new Logger("app/server", new LoggingManager());
+    applogger.log(`The skarbnik-teapot server is starting...`);
 
     database = await createConnection();
     await seedDatabase();
