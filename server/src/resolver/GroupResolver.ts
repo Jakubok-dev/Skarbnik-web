@@ -53,7 +53,7 @@ const groupAuthorisation = async (
     if (
         account.permissionsManager.hasPermission(authorisationPack.group)
         &&
-        group.id === (await account?.group)?.id
+        group?.id === (await account?.group)?.id
     )
         return authorisationPack.group;
 

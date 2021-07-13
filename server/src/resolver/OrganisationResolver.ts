@@ -39,7 +39,7 @@ const organisationAuthorisation = async (
     if (
         account.permissionsManager.hasPermission(authorisationPack.organisation)
         &&
-        organisation.id === (await account.person.organisation).id
+        organisation?.id === (await account.person.organisation).id
     )
         return authorisationPack.organisation;
 

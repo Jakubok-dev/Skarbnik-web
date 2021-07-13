@@ -40,7 +40,7 @@ class PersonUpdateInput {
 export const personAuthorisation = async (
     account :Account,
     person :Person,
-    authorisationPack :AuthorisationPack
+    authorisationPack :AuthorisationPack,
 ) => {
 
     if (account!.permissionsManager.hasPermission(authorisationPack.everyone)) 
@@ -52,8 +52,6 @@ export const personAuthorisation = async (
         (await person.organisation).id === (await account?.person.organisation).id
     )
         return ORGANISATION;
-    else if (account!.permissionsManager.hasPermission(authorisationPack.organisation))
-        throw new AuthorisationError();
 
     if (
         account!.permissionsManager.hasPermission(authorisationPack.group)
@@ -61,17 +59,13 @@ export const personAuthorisation = async (
         (await person.groups).filter(async el => el.id === (await account?.group)?.id).length > 0
     )
         return GROUP
-    else if (account!.permissionsManager.hasPermission(authorisationPack.group))
-        throw new AuthorisationError();
     
     if (
         account!.permissionsManager.hasPermission(authorisationPack.own)
         &&
-        person.id === account?.person.id
+        person?.id === account?.person.id
     )
         return OWN;
-    else if (account!.permissionsManager.hasPermission(authorisationPack.own))
-        throw new AuthorisationError();
     
     throw new AuthorisationError();
 }
@@ -82,7 +76,7 @@ export class PersonResolver {
     @UseMiddleware(Authenticate)
     @Query(() => [Person])
     async people(
-        @Ctx() { account } :AppContext
+        @Ctx() { account } :AppContext,
     ) {
         if (account!.permissionsManager.hasPermission(Permission.SEE_EVERYONES_DATA))
             return await database.getRepository(Person).find();
@@ -110,7 +104,7 @@ export class PersonResolver {
     @Query(() => Person)
     async person(
         @Arg("id") id :string,
-        @Ctx() { account } :AppContext
+        @Ctx() { account } :AppContext,
     ) {
         const person = await database.getRepository(Person).findOne(id);
         if (!person)
@@ -161,7 +155,7 @@ export class PersonResolver {
     @Mutation(() => Person)
     async updatePerson(
         @Arg("person") update :PersonUpdateInput,
-        @Ctx() { account } :AppContext
+        @Ctx() { account } :AppContext,
     ) {
         const person = await database.getRepository(Person).findOne(update.id);
         if (!person) 
@@ -190,7 +184,7 @@ export class PersonResolver {
     @Mutation(() => Boolean)
     async deletePerson(
         @Arg("id") id :string,
-        @Ctx() { account } :AppContext
+        @Ctx() { account } :AppContext,
     ) {
         const person = await database.getRepository(Person).findOne(id);
         if (!person)

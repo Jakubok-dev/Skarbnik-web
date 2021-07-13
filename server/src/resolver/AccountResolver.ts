@@ -52,8 +52,6 @@ export const accountAuthorisation = async (
         (await account?.person.organisation).id === (await invoker?.person.organisation).id
     )
         return authorisationPack.organisation;
-    else if (invoker.permissionsManager.hasPermission(authorisationPack.organisation))
-        throw new AuthorisationError();
 
     if (
         invoker.permissionsManager.hasPermission(authorisationPack.group)
@@ -61,17 +59,13 @@ export const accountAuthorisation = async (
         (await account.group)?.id === (await invoker?.group)?.id
     )
         return authorisationPack.group;
-    else if (invoker.permissionsManager.hasPermission(authorisationPack.group))
-        throw new AuthorisationError();
 
     if (
         invoker.permissionsManager.hasPermission(authorisationPack.own)
         &&
-        invoker.id === account.id
+        invoker?.id === account.id
     )
         return authorisationPack.own;
-    else if (invoker.permissionsManager.hasPermission(authorisationPack.own))
-        throw new AuthorisationError();
 
     throw new AuthorisationError();
 }
