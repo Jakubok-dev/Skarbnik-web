@@ -37,7 +37,7 @@ class AccountUpdateInput {
     personID ?:string;
 }
 
-const authorise = async (
+export const accountAuthorisation = async (
     invoker :Account,
     account :Account,
     authorisationPack :AuthorisationPack,
@@ -91,7 +91,7 @@ export class AccountResolver {
                 argumentName: "id"
             });
 
-        authorise(loggedAccount!, account, new SeeDataPack());
+        accountAuthorisation(loggedAccount!, account, new SeeDataPack());
 
         return account;
     }
@@ -155,7 +155,7 @@ export class AccountResolver {
 
         account.permissionsManager.account = account.toPromise();
 
-        authorise(loggedAccount!, account, new CreateServereDataPack());
+        accountAuthorisation(loggedAccount!, account, new CreateServereDataPack());
         
         return await database.getRepository(Account).save(account);
     }
@@ -191,7 +191,7 @@ export class AccountResolver {
             account.person = person;
         }
 
-        authorise(loggedAccount!, account, new UpdateServereDataPack());
+        accountAuthorisation(loggedAccount!, account, new UpdateServereDataPack());
     
         return await account.save();
     }
@@ -206,7 +206,7 @@ export class AccountResolver {
         if (!account)
             return false;
 
-        authorise(loggedAccount!, account, new RemoveServereDataPack());
+        accountAuthorisation(loggedAccount!, account, new RemoveServereDataPack());
 
         await account.beforeRemove();
         await account.remove();

@@ -37,7 +37,7 @@ class PersonUpdateInput {
 
 
 
-const authorise = async (
+const personAuthorisation = async (
     account :Account,
     person :Person,
     authorisationPack :AuthorisationPack
@@ -118,7 +118,7 @@ export class PersonResolver {
                 argumentName: "id"
             });
         
-        authorise(account!, person, new SeeDataPack())
+        personAuthorisation(account!, person, new SeeDataPack())
 
         return person;
     }
@@ -152,7 +152,7 @@ export class PersonResolver {
         });
         person.organisation = organisation.toPromise()
 
-        authorise(account!, person, new CreateServereDataPack());
+        personAuthorisation(account!, person, new CreateServereDataPack());
         
         return await person.save();
     }
@@ -169,7 +169,7 @@ export class PersonResolver {
                 argumentName: `person.id`
             });
 
-        authorise(account!, person, new UpdateServereDataPack());
+        personAuthorisation(account!, person, new UpdateServereDataPack());
         
         if (update.name)
             person.name = update.name;
@@ -196,7 +196,7 @@ export class PersonResolver {
         if (!person)
             return false;
 
-        authorise(account!, person, new RemoveServereDataPack());
+        personAuthorisation(account!, person, new RemoveServereDataPack());
 
         await person.beforeRemove();
         await person.remove();

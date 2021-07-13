@@ -34,3 +34,8 @@ export class RemoveServereDataPack implements AuthorisationPack {
     organisation: Permission = Permission.REMOVE_PEOPLES_IN_THE_SAME_ORGANISATION_SERVERE_DATA;
     everyone: Permission = Permission.REMOVE_EVERYONES_SERVERE_DATA;
 }
+
+export type PermissionAuthorisationPack = {
+    same :Permission.ADVANCE_TO_THE_SAME_LEVEL_WHICH_IS_ADVISOR | Permission.DISADVANCE_FROM_THE_SAME_LEVEL_WHICH_IS_DISADVISOR;
+    lower :Permission.ADVANCE_TO_THE_LOWER_LEVEL_WHICH_IS_ADVISOR | Permission.DISADVANCE_FROM_THE_LOWER_LEVEL_WHICH_IS_DISADVISOR;
+}
