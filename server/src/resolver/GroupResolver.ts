@@ -1,10 +1,16 @@
 import { Group } from "../entity/Group";
-import { Arg, Field, InputType, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
+import { Arg, Ctx, Field, InputType, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { Authenticate } from "../middleware/authenticate";
-import { applogger, database } from "../app";
+import { database } from "../app";
 import { UserInputError } from "apollo-server-express";
 import { Organisation } from "../entity/Organisation";
 import { Person } from "../entity/Person";
+import { Account } from "../entity/Account";
+import { AuthorisationPack, CreateServereDataPack, RemoveServereDataPack, SeeDataPack, UpdateServereDataPack } from "../permissions/AuthorisationPacks";
+import { AuthorisationError } from "../error/AuthorisationError";
+import { AppContext } from "../types";
+import { Permission } from "../permissions/Permission";
+import { personAuthorisation } from "./PersonResolver";
 
 @InputType()
 class GroupInput {
@@ -28,19 +34,58 @@ class GroupUpdateInput {
     peopleIDs ?:string[];
 }
 
+const groupAuthorisation = async (
+    account :Account,
+    group :Group,
+    authorisationPack :AuthorisationPack
+) => {
+
+    if (account.permissionsManager.hasPermission(authorisationPack.everyone))
+        return authorisationPack.everyone;
+    
+    if (
+        account.permissionsManager.hasPermission(authorisationPack.organisation)
+        &&
+        (await group.organisation).id === (await account.person.organisation).id
+    )
+        return authorisationPack.organisation;
+
+    if (
+        account.permissionsManager.hasPermission(authorisationPack.group)
+        &&
+        group.id === (await account?.group)?.id
+    )
+        return authorisationPack.group;
+
+    throw new AuthorisationError();
+}
+
 @Resolver(Group)
 export class GroupResolver {
 
     @UseMiddleware(Authenticate)
     @Query(() => [Group])
-    async groups() {
-        return await database.getRepository(Group).find();
+    async groups(
+        @Ctx() { account } :AppContext,
+    ) {
+
+        if (account?.permissionsManager.hasPermission(Permission.SEE_EVERYONES_DATA))
+            return await database.getRepository(Group).find();
+        
+        if (account?.permissionsManager.hasPermission(Permission.SEE_PEOPLES_IN_THE_SAME_ORGANISATION_DATA))
+            return await database.getRepository(Group).find({ where: { organisation: account.person.organisation } });
+
+        if (account?.permissionsManager.hasPermission(Permission.SEE_GROUPMATES_DATA))
+            return await database.getRepository(Group).find({ where: { id: (await account.group)?.id } });
+
+        throw new AuthorisationError();
     }
 
     @UseMiddleware(Authenticate)
     @Query(() => Group)
     async group(
-        @Arg(`id`) ID :string
+        @Arg(`id`) ID :string,
+        @Ctx() { account } :AppContext,
     ) {
         const group = await database.getRepository(Group).findOne(ID);
 
@@ -49,13 +94,16 @@ export class GroupResolver {
                 argumentName: "id"
             });
 
+        groupAuthorisation(account!, group, new SeeDataPack());
+
         return group;
     }
 
     @UseMiddleware(Authenticate)
     @Mutation(() => Group)
     async addGroup(
-        @Arg(`group`) groupInput :GroupInput
+        @Arg(`group`) groupInput :GroupInput,
+        @Ctx() { account } :AppContext,
     ) {
         const organisation = await database.getRepository(Organisation).findOne(groupInput.organisationID);
 
@@ -75,13 +123,16 @@ export class GroupResolver {
         });
         group.organisation = organisation.toPromise();
 
+        groupAuthorisation(account!, group, new CreateServereDataPack());
+
         return await group.save();
     }
 
     @UseMiddleware(Authenticate)
     @Mutation(() => Group)
     async updateGroup(
-        @Arg(`group`) update :GroupUpdateInput
+        @Arg(`group`) update :GroupUpdateInput,
+        @Ctx() { account } :AppContext,
     ) {
         const group = await database.getRepository(Group).findOne(update.id);
 
@@ -115,18 +166,23 @@ export class GroupResolver {
             }
         }
 
+        groupAuthorisation(account!, group, new UpdateServereDataPack());
+
         return await group.save();
     }
 
     @UseMiddleware(Authenticate)
     @Mutation(() => Boolean)
     async removeGroup(
-        @Arg(`id`) ID :string
+        @Arg(`id`) ID :string,
+        @Ctx() { account } :AppContext,
     ) {
         const group = await database.getRepository(Group).findOne(ID);
 
         if (!group)
             return false;
+
+        groupAuthorisation(account!, group, new RemoveServereDataPack());
 
         await group.beforeRemove();
         await group.save();
@@ -138,7 +194,8 @@ export class GroupResolver {
     @Mutation(() => Boolean)
     async addToGroup(
         @Arg(`person`) personID :string,
-        @Arg(`group`) groupID :string
+        @Arg(`group`) groupID :string,
+        @Ctx() { account } :AppContext,
     ) {
         const person = await database.getRepository(Person).findOne(personID);
         if (!person)
@@ -151,6 +208,9 @@ export class GroupResolver {
         if ((await person.groups).filter(el => el.id === group.id).length > 0)
             return false;
 
+        groupAuthorisation(account!, group, new CreateServereDataPack());
+        personAuthorisation(account!, person, new CreateServereDataPack());
+
         (await group.people).push(person);
         await group.save();
         
@@ -161,7 +221,8 @@ export class GroupResolver {
     @Mutation(() => Boolean)
     async removeFromGroup(
         @Arg(`person`) personID :string,
-        @Arg(`group`) groupID :string
+        @Arg(`group`) groupID :string,
+        @Ctx() { account } :AppContext,
     ) {
         const person = await database.getRepository(Person).findOne(personID);
         if (!person)
@@ -175,7 +236,11 @@ export class GroupResolver {
         if (!personInGroup)
             return false;
 
+        groupAuthorisation(account!, group, new RemoveServereDataPack());
+        personAuthorisation(account!, person, new RemoveServereDataPack());
+
         (await group.people).splice((await group.people).indexOf(personInGroup));
+        await group.save();
         
         return true;
     }

@@ -37,7 +37,7 @@ class PersonUpdateInput {
 
 
 
-const personAuthorisation = async (
+export const personAuthorisation = async (
     account :Account,
     person :Person,
     authorisationPack :AuthorisationPack
