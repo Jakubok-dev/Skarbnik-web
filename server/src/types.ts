@@ -8,3 +8,17 @@ export type AppContext = {
     token :AppToken,
     account ?:Account
 }
+
+type CustomAdress = {
+    domain ?:string,
+    ports ?:number[],
+    isHTTPS ?:boolean
+}
+
+export type CorsOriginsConfig = {
+    localIPsAllowed ?:boolean,
+    localIPsAllowedPorts ?:number[],
+    areLocalIPsHTTPS ?:boolean,
+
+    customAdressess ?:CustomAdress[];
+}

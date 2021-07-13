@@ -1,0 +1,13 @@
+{
+    "localIPsAllowed": true,
+    "localIPsAllowedPorts": [3000],
+    "areLocalIPsHTTPS": false,
+
+    "customAdressess": [
+        {
+            "domain": "localhost",
+            "ports": [3000],
+            "isHTTPS": false
+        }
+    ]
+}
