@@ -49,29 +49,29 @@ const authorise = async (
     if (
         account!.permissionsManager.hasPermission(authorisationPack.organisation) 
         && 
-        (await person.organisation).id !== (await account!.person.organisation).id
+        (await person.organisation).id === (await account?.person.organisation).id
     )
-        throw new AuthorisationError();
-    else if (account!.permissionsManager.hasPermission(authorisationPack.organisation))
         return ORGANISATION;
+    else if (account!.permissionsManager.hasPermission(authorisationPack.organisation))
+        throw new AuthorisationError();
 
     if (
         account!.permissionsManager.hasPermission(authorisationPack.group)
         && 
-        (await person.groups).filter(async el => el.id === (await account?.group)?.id).length === 0
+        (await person.groups).filter(async el => el.id === (await account?.group)?.id).length > 0
     )
-        throw new AuthorisationError();
+        return GROUP
     else if (account!.permissionsManager.hasPermission(authorisationPack.group))
-        return GROUP;
+        throw new AuthorisationError();
     
     if (
         account!.permissionsManager.hasPermission(authorisationPack.own)
         &&
-        person.id !== account?.person.id
+        person.id === account?.person.id
     )
-        throw new AuthorisationError();
-    else if (account!.permissionsManager.hasPermission(authorisationPack.own))
         return OWN;
+    else if (account!.permissionsManager.hasPermission(authorisationPack.own))
+        throw new AuthorisationError();
     
     throw new AuthorisationError();
 }
