@@ -1,8 +1,0 @@
-.form-body {
-    background-color: var(--bs-light);
-    border-radius: 10px;
-}
-
-.validation-fail {
-    color: var(--bs-danger);
-}
