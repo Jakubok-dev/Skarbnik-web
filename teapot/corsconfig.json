@@ -1,12 +1,12 @@
 {
     "localIPsAllowed": true,
-    "localIPsAllowedPorts": [3000],
+    "localIPsAllowedPorts": [4200],
     "areLocalIPsHTTPS": false,
 
     "customAdressess": [
         {
             "domain": "localhost",
-            "ports": [3000],
+            "ports": [4200],
             "isHTTPS": false
         }
     ]

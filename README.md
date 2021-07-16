@@ -6,9 +6,9 @@
 # Structure
 <center>
 
-|Codebase            |Description                  |
-|:------------------:|:---------------------------:|
-|[depth](depth)      |The react app                |
-|[teapot](teapot)    |The typescript graphql server|
+|Codebase                |Description                  |
+|:----------------------:|:---------------------------:|
+|[magnifier](magnifier)  |The angular app              |
+|[teapot](teapot)        |The typescript graphql server|
 
 </center>
