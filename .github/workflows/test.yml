@@ -18,5 +18,5 @@ jobs:
       - run: npm --prefix ./teapot ci
       - run: npm run --prefix ./teapot testLinux
 
-      - run: npm --prefix ./depth ci
-      - run: npm run --prefix ./depth build
+      - run: npm --prefix ./magnifier ci
+      - run: npm run --prefix ./magnifier build
