@@ -1,7 +1,7 @@
 import { ElementRef, HostBinding, ViewEncapsulation } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { faMoon, faSun } from '@fortawesome/free-regular-svg-icons';
-import { ThemeService } from 'src/app/services/theme.service';
+import { ThemeService } from 'src/app/services/theme/theme.service';
 
 @Component({
   selector: 'app-navbar',
