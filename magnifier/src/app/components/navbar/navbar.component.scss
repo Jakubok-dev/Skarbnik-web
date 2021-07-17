@@ -21,18 +21,6 @@
 .navbar {
     display: flex;
     padding: 12px;
-}
-
-.theme-light {
-    .navbar {
-        background-color: mat.get-color-from-palette($green-palette, 400);
-        color: mat.get-color-from-palette($green-palette, 400-contrast);
-    }
-}
-
-.theme-dark {
-    .navbar {
-        background-color: mat.get-color-from-palette($green-palette, 600);
-        color: mat.get-color-from-palette($green-palette, 600-contrast);
-    }
+    background-color: mat.get-color-from-palette($green-palette, 600);
+    color: $white;
 }
