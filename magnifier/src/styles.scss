@@ -22,10 +22,6 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif; 
 }
 
-#background {
-  height: 100vh;
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -34,18 +30,12 @@ body {
 html, body { height: 100%; }
 
 @include mat.all-component-themes($magnifier-light-theme);
-#background {
-  background-color: $light;
-  color: $black;
-}
 
 .theme-dark {
   @include mat.all-component-colors($magnifier-dark-theme);
 
-  #background {
-    background-color: $dark;
-    color: $white;
-  }
+  background-color: $dark;
+  color: $white;
 
   // .navbar {
   //   background-color: mat.get-color-from-palette($green-palette, 600);

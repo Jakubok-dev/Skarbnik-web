@@ -6,12 +6,4 @@ import { ThemeService } from './services/theme/theme.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-
-  constructor(private themeService :ThemeService) {}
-
-  @HostBinding(`class`)
-  get themeMode() {
-    return this.themeService.darkMode ? `theme-dark` : `theme-light`;
-  }
-}
+export class AppComponent { }
