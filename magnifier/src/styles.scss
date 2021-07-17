@@ -1,1 +1,64 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '~@angular/material' as mat;
+// Plus imports for other components in your app.
+
+@import './styles/colours.scss';
+@import './styles/palettes.scss';
+@import './styles/themes.scss';
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+
 /* You can add global styles to this file, and also import other style files */
+
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif; 
+}
+
+#background {
+  height: 100vh;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html, body { height: 100%; }
+
+.theme-dark {
+  @include mat.all-component-themes($magnifier-dark-theme);
+  @include mat.core-theme($magnifier-dark-theme);
+
+  #background {
+    background-color: $dark;
+    color: $white;
+  }
+
+  // .navbar {
+  //   background-color: mat.get-color-from-palette($green-palette, 600);
+  //   color: mat.get-color-from-palette($green-palette, 600-contrast);
+  // }
+}
+
+.theme-light {
+  @include mat.all-component-themes($magnifier-light-theme);
+  @include mat.core-theme($magnifier-light-theme);
+
+  #background {
+    background-color: $light;
+    color: $black;
+  }
+
+  // .navbar {
+  //   background-color: mat.get-color-from-palette($green-palette, 500);
+  //   color: mat.get-color-from-palette($green-palette, 500-contrast);
+  // }
+}
