@@ -10,11 +10,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { UserMenuComponent } from './components/user-menu/user-menu.component';
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent
+    NavbarComponent,
+    UserMenuComponent
   ],
   imports: [
     BrowserModule,
@@ -25,6 +28,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatButtonModule,
     MatSlideToggleModule,
     FontAwesomeModule,
+    MatMenuModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
