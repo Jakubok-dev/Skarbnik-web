@@ -3,6 +3,6 @@
     <button mat-stroked-button [matMenuTriggerFor]="menu">{{ user?.username }}</button>
 
     <mat-menu #menu="matMenu">
-        <button mat-button color="warn">Wyloguj Się</button>
+        <button mat-button color="warn" (click)="logOut()">Wyloguj Się</button>
     </mat-menu>
 </div>

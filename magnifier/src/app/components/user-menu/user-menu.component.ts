@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Apollo } from 'apollo-angular';
+import { LOG_OUT } from 'src/app/graphql/mutations/logout';
 import { AuthorisationService } from 'src/app/services/authorisation/authorisation.service';
-import { ThemeService } from 'src/app/services/theme/theme.service';
 
 @Component({
   selector: 'app-user-menu',
@@ -10,7 +11,7 @@ import { ThemeService } from 'src/app/services/theme/theme.service';
 })
 export class UserMenuComponent implements OnInit {
 
-  constructor(private authorisationService :AuthorisationService) {
+  constructor(private authorisationService :AuthorisationService, private apollo :Apollo, private router :Router) {
   }
 
   get logged() {
@@ -19,6 +20,14 @@ export class UserMenuComponent implements OnInit {
 
   get user() {
     return this.authorisationService.user;
+  }
+
+  logOut() {
+    this.apollo.mutate({ mutation: LOG_OUT })
+    .subscribe(({ data }) => {
+      if ((data as any).logout === true)
+        window.location.reload();
+    });
   }
 
   ngOnInit(): void {
