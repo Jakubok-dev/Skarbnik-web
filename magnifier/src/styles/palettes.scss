@@ -1,0 +1,33 @@
+@import './colours.scss';
+
+@function gen-palette($colour: #000) {
+    @return (
+        50: lighten($colour, 20%),
+        100: lighten($colour, 15%),
+        200: lighten($colour, 15%),
+        300: lighten($colour, 10%),
+        400: lighten($colour, 5%),
+        500: $colour,
+        600: darken($colour, 5%),
+        700: darken($colour, 10%),
+        800: darken($colour, 15%),
+        900: darken($colour, 20%),
+
+        contrast: (
+            50: rgba(black, 0.87),
+            100: rgba(black, 0.87),
+            200: rgba(black, 0.87),
+            300: rgba(black, 0.87),
+            400: rgba(white, 0.87),
+            500: rgba(white, 0.87),
+            600: rgba(white, 0.87),
+            700: rgba(white, 0.87),
+            800: rgba(white, 0.87),
+            900: rgba(white, 0.87)
+        )
+    )
+};
+
+$green-palette: gen-palette($green);
+$blue-palette: gen-palette($blue);
+$red-palette: gen-palette($red);

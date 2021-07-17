@@ -1,0 +1,38 @@
+@use '~@angular/material' as mat;
+@import '../../../styles.scss';
+@import '../../../styles/palettes.scss';
+
+@mixin navbar {
+    display: flex;
+    padding: 12px;
+}
+
+.brand {
+    margin-top: 6px;
+    font-size: 2em;
+}
+
+.dark-mode-toggler {
+    margin-right: 24px;
+    margin-top: 6px;
+    font-size: 1.5em;
+}
+
+.navbar {
+    display: flex;
+    padding: 12px;
+}
+
+.theme-light {
+    .navbar {
+        background-color: mat.get-color-from-palette($green-palette, 400);
+        color: mat.get-color-from-palette($green-palette, 400-contrast);
+    }
+}
+
+.theme-dark {
+    .navbar {
+        background-color: mat.get-color-from-palette($green-palette, 600);
+        color: mat.get-color-from-palette($green-palette, 600-contrast);
+    }
+}
