@@ -5,6 +5,7 @@ import { Apollo } from 'apollo-angular';
 import { map } from 'rxjs/operators';
 import { LOG_IN } from 'src/app/graphql/mutations/login';
 import { AuthorisationService } from 'src/app/services/authorisation/authorisation.service';
+import { HeadService } from 'src/app/services/head/head.service';
 
 @Component({
   selector: 'app-log-in',
@@ -13,7 +14,15 @@ import { AuthorisationService } from 'src/app/services/authorisation/authorisati
 })
 export class LogInComponent implements OnInit {
 
-  constructor(private authorisationService :AuthorisationService, private router :Router, private formBuilder :FormBuilder, private apollo :Apollo) { }
+  constructor(
+    private authorisationService :AuthorisationService,
+    private router :Router,
+    private formBuilder :FormBuilder, 
+    private apollo :Apollo, 
+    private headService :HeadService
+  ) { 
+    this.headService.titlePrefix = `Zaloguj`;
+  }
 
   logInForm :FormGroup;
 
