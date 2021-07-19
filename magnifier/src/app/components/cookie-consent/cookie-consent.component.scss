@@ -1,0 +1,24 @@
+@use '~@angular/material' as mat;
+@import '../../../styles/themes.scss';
+@import '../../../styles/colours.scss';
+
+.cookie-consent {
+    width: 100%;
+    min-height: 12px;
+    height: fit-content;
+    text-align: center;
+    font-size: 1.1em;
+    padding: 5px 0;
+    background-color: mat.get-color-from-palette($magnifier-accent, 500);
+    color: $white;
+}
+
+.content {
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+
+button {
+    margin-left: 16px;
+}

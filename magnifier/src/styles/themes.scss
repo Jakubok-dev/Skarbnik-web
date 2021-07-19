@@ -3,28 +3,24 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$magnifier-light-primary: mat.define-palette($green-palette, 600);
-$magnifier-light-accent: mat.define-palette($blue-palette, 500);
-$magnifier-light-warn: mat.define-palette($red-palette, 400);
-
-$magnifier-dark-primary: mat.define-palette($green-palette, 600);
-$magnifier-dark-accent: mat.define-palette($blue-palette, 500);
-$magnifier-dark-warn: mat.define-palette($red-palette, 400);
+$magnifier-primary: mat.define-palette($green-palette, 600);
+$magnifier-accent: mat.define-palette($blue-palette, 500);
+$magnifier-warn: mat.define-palette($red-palette, 400);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
 $magnifier-light-theme: mat.define-light-theme((
   color: (
-    primary: $magnifier-light-primary,
-    accent: $magnifier-light-accent,
-    warn: $magnifier-light-warn,
+    primary: $magnifier-primary,
+    accent: $magnifier-accent,
+    warn: $magnifier-warn,
   )
 ));
 
 $magnifier-dark-theme: mat.define-dark-theme((
   color: (
-    primary: $magnifier-dark-primary,
-    accent: $magnifier-dark-accent,
-    warn: $magnifier-dark-warn,
+    primary: $magnifier-primary,
+    accent: $magnifier-accent,
+    warn: $magnifier-warn,
   )
 ));

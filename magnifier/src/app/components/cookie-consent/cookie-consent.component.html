@@ -1,0 +1,6 @@
+<div class="cookie-consent" *ngIf="!consented">
+    <div class="content">
+        <span>Ta strona używa plików cookies, pozostając na niej zgadzasz się na ich używanie.</span>
+        <button mat-flat-button color="primary" (click)="consent()">Ok</button>
+    </div>
+</div>
