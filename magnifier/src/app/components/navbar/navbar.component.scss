@@ -2,14 +2,19 @@
 @import '../../../styles.scss';
 @import '../../../styles/palettes.scss';
 
-@mixin navbar {
-    display: flex;
-    padding: 12px;
-}
-
 .brand {
     margin-top: 6px;
     font-size: 2em;
+
+    a {
+        color: $white;
+        text-decoration: none;
+    
+        &:hover {
+          color: $light;
+          text-decoration: underline;
+        }
+    }
 }
 
 .dark-mode-toggler {
@@ -23,4 +28,5 @@
     padding: 12px;
     background-color: mat.get-color-from-palette($green-palette, 600);
     color: $white;
+    margin-bottom: 24px;
 }

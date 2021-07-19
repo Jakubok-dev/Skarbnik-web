@@ -1,0 +1,33 @@
+<div class="main-content">
+    <div class="title">Zaloguj Się</div>
+
+    <form [formGroup]="logInForm" class="form" (ngSubmit)="submit()">
+
+        <mat-form-field>
+            <input 
+                matInput 
+                placeholder="Nazwa użytkownika" 
+                formControlName="username">
+
+            <mat-error *ngIf="username?.invalid && username.touched">Nazwa użytkownika jest wymagana</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input 
+                matInput 
+                type="password" 
+                placeholder="Hasło" 
+                formControlName="password">
+            <mat-error *ngIf="password?.invalid && password.touched">Hasło jest wymagane</mat-error>
+        </mat-form-field>
+
+        <button 
+            mat-flat-button 
+            color="primary"
+            type="submit"
+            [disabled]="logInForm.invalid">Zaloguj</button>
+
+        <mat-error *ngIf="logInForm?.errors?.failed">Nie udało się zalogować</mat-error>
+
+    </form>
+</div>

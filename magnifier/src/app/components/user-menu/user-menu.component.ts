@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
+import { map } from 'rxjs/operators';
 import { LOG_OUT } from 'src/app/graphql/mutations/logout';
+import { Account } from 'src/app/graphql/types/account';
 import { AuthorisationService } from 'src/app/services/authorisation/authorisation.service';
 
 @Component({
@@ -14,12 +16,10 @@ export class UserMenuComponent implements OnInit {
   constructor(private authorisationService :AuthorisationService, private apollo :Apollo, private router :Router) {
   }
 
-  get logged() {
-    return this.authorisationService.authorised;
-  }
+  user :Account;
 
-  get user() {
-    return this.authorisationService.user;
+  get logged() {
+    return this.user !== undefined && this.user !== null;
   }
 
   logOut() {
@@ -31,6 +31,7 @@ export class UserMenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authorisationService.user.subscribe(user => this.user = user);
   }
 
 }

@@ -1,8 +1,8 @@
-<button *ngIf="!logged" mat-stroked-button>Zaloguj Się</button>
+<a *ngIf="!logged" mat-stroked-button routerLink="/login">Zaloguj Się</a>
 <div *ngIf="logged">
-    <button mat-stroked-button [matMenuTriggerFor]="menu">{{ user?.username }}</button>
+    <button mat-stroked-button [matMenuTriggerFor]="menu">{{ user.username }}</button>
 
     <mat-menu #menu="matMenu">
-        <button mat-button color="warn" (click)="logOut()">Wyloguj Się</button>
+        <button mat-menu-item color="warn" (click)="logOut()">Wyloguj Się</button>
     </mat-menu>
 </div>
