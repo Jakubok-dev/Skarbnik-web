@@ -19,8 +19,7 @@ export class NavbarComponent implements OnInit {
   get darkMode() { return this.themeService.darkMode; }
 
   toggleDarkMode() {
-    this.themeService.darkMode = !this.themeService.darkMode;
-    this.themeService.loadTheme(this.elementRef);
+    this.themeService.toggleTheme(this.elementRef);
   }
 
   faMoon = faMoon;
