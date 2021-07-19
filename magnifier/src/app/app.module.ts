@@ -15,13 +15,15 @@ import {MatMenuModule} from '@angular/material/menu';
 import { LogInComponent } from './sites/log-in/log-in.component';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     UserMenuComponent,
-    LogInComponent
+    LogInComponent,
+    CookieConsentComponent
   ],
   imports: [
     BrowserModule,
