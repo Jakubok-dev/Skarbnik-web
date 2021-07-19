@@ -1,6 +1,5 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component } from '@angular/core';
 import { HeadService } from './services/head/head.service';
-import { ThemeService } from './services/theme/theme.service';
 
 @Component({
   selector: 'app-root',

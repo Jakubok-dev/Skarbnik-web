@@ -63,15 +63,23 @@ export class PermissionsManagerResolver {
     @UseMiddleware(Authenticate)
     @Query(() => [Boolean])
     async hasPermissions(
-        @Root() manager :PermissionsManager,
         @Arg("permissions", () => [String]) permission :string[],
         @Ctx() { account: loggedAccount } :AppContext,
+        @Arg("accountID", { nullable: true }) accountID ?:string,
     ) {
-        accountAuthorisation(loggedAccount!, await manager.account, new SeeDataPack());
+        if (!accountID)
+            accountID = loggedAccount!.id;
+        const account = await database.getRepository(Account).findOne(accountID);
+        if (!account)
+            throw new UserInputError(`Object not found`, {
+                argumentName: "accountID"
+            });
+
+        accountAuthorisation(loggedAccount!, await account, new SeeDataPack());
 
         const parsedPermissions :Permission[] = permission.map(el => Permission[el as keyof typeof Permission]);
 
-        return parsedPermissions.map(el => manager.hasPermission(el));
+        return parsedPermissions.map(el => account.permissionsManager.hasPermission(el));
     }
 
     // @UseMiddleware(Authenticate)
