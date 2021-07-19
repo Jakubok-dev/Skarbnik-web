@@ -19,7 +19,8 @@
 /* You can add global styles to this file, and also import other style files */
 
 body {
-  font-family: Roboto, "Helvetica Neue", sans-serif; 
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: $light;
 }
 
 * {
@@ -31,11 +32,24 @@ html, body { height: 100%; }
 
 @include mat.all-component-themes($magnifier-light-theme);
 
+.main-content {
+  padding: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  border-radius: 15px;
+  background-color: darken($light, 5%);
+}
+
 .theme-dark {
   @include mat.all-component-colors($magnifier-dark-theme);
 
   background-color: $dark;
   color: $white;
+
+  .main-content {
+    background-color: lighten($dark, 5%);
+  }
 
   // .navbar {
   //   background-color: mat.get-color-from-palette($green-palette, 600);

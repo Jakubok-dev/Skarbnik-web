@@ -12,12 +12,16 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { UserMenuComponent } from './components/user-menu/user-menu.component';
 import {MatMenuModule} from '@angular/material/menu';
+import { LogInComponent } from './sites/log-in/log-in.component';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    UserMenuComponent
+    UserMenuComponent,
+    LogInComponent
   ],
   imports: [
     BrowserModule,
@@ -29,6 +33,9 @@ import {MatMenuModule} from '@angular/material/menu';
     MatSlideToggleModule,
     FontAwesomeModule,
     MatMenuModule,
+    MatInputModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

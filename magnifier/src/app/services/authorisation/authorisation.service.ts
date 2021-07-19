@@ -1,7 +1,7 @@
-import { query } from '@angular/animations';
 import { Injectable, OnInit } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ME } from 'src/app/graphql/queries/me';
 import { Account } from 'src/app/graphql/types/account';
 
@@ -11,23 +11,25 @@ import { Account } from 'src/app/graphql/types/account';
 export class AuthorisationService {
 
   querySubscription ?:Subscription;
-  private _user ?:Account;
+  loading = true;
+  private _user ?:Observable<Account>;
 
   get user() {
     return this._user;
   }
 
   get authorised() {
-    return this._user !== undefined && this._user !== null;
+    return this._user.pipe(map( user => user !== undefined && user !== null ));
   }
   
   constructor(private apollo :Apollo) {
 
-    this.querySubscription = this.apollo.watchQuery({ query: ME })
+    this._user = this.apollo.watchQuery({ query: ME })
     .valueChanges
-    .subscribe(({ data }) => {
-      this._user = (data as any).me as Account;
-      console.log(data);
-    });
+    .pipe(map(response => (response.data as any).me as Account));
+    // .subscribe(({ data, loading }) => {
+    //   this.loading = loading;
+    //   this._user = (data as any).me as Account;
+    // });
   }
 }

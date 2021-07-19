@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { LogInComponent } from './sites/log-in/log-in.component';
 
 const routes: Routes = [
+  { path: 'login', component: LogInComponent }
 ];
 
 @NgModule({
