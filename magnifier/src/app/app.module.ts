@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
 import { HomeComponent } from './sites/home/home.component';
+import { OrganisationsComponent } from './sites/organisations/organisations.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { HomeComponent } from './sites/home/home.component';
     LogInComponent,
     CookieConsentComponent,
     HomeComponent,
+    OrganisationsComponent,
   ],
   imports: [
     BrowserModule,
