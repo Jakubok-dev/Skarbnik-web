@@ -17,12 +17,14 @@ export class UserMenuComponent implements OnInit {
   }
 
   user :Account;
+  seeEveryonesDataPermitted = false;
 
   get logged() {
     return this.user !== undefined && this.user !== null;
   }
 
   logOut() {
+    this.authorisationService.permitted([`SEE_EVERYONES_DATA`]);
     this.apollo.mutate({ mutation: LOG_OUT })
     .subscribe(({ data }) => {
       if ((data as any).logout === true)
@@ -32,6 +34,7 @@ export class UserMenuComponent implements OnInit {
 
   ngOnInit(): void {
     this.authorisationService.user.subscribe(user => this.user = user);
+    this.authorisationService.permitted(['SEE_EVERYONES_DATA']).subscribe(result => this.seeEveryonesDataPermitted = result);
   }
 
 }

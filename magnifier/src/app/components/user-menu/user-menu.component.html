@@ -3,6 +3,12 @@
     <button mat-stroked-button [matMenuTriggerFor]="menu">{{ user.username }}</button>
 
     <mat-menu #menu="matMenu">
-        <button mat-menu-item color="warn" (click)="logOut()">Wyloguj Się</button>
+        <a 
+            *ngIf="seeEveryonesDataPermitted"
+            [routerLink]="['./organisations']"
+            mat-menu-item>Organizacje</a>
+        <button 
+            mat-menu-item color="warn" 
+            (click)="logOut()">Wyloguj Się</button>
     </mat-menu>
 </div>
