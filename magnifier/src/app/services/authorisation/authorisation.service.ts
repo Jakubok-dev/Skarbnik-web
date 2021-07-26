@@ -45,8 +45,6 @@ export class AuthorisationService {
       .valueChanges
       .pipe(map(answers => {
 
-        console.log(user, answers);
-
         if (user === null || user === undefined)
           return false;
 
