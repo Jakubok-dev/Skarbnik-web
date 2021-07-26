@@ -1,9 +1,5 @@
-import { ApolloError } from "@apollo/client";
-
-export class AuthorisationError extends ApolloError {
+export class AuthorisationError extends Error {
     constructor() {
-        super({
-            errorMessage: `403 Forbidden access`
-        });
+        super(`403 Forbidden access`);
     }
 }
