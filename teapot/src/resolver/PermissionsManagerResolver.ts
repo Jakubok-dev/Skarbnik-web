@@ -76,7 +76,7 @@ export class PermissionsManagerResolver {
                 argumentName: "accountID"
             });
 
-        if (await accountAuthorisation(loggedAccount!, account, new SeeDataPack()))
+        if (await accountAuthorisation(loggedAccount!, account, new SeeDataPack()) === false)
             throw new AuthorisationError();
 
         const parsedPermissions :Permission[] = permission.map(el => Permission[el as keyof typeof Permission]);

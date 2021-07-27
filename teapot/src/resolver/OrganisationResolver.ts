@@ -135,7 +135,7 @@ export class OrganisationResolver {
         if (!organisation)
             return false;
 
-        if (await organisationAuthorisation(account!, organisation, new RemoveServereDataPack()))
+        if (await organisationAuthorisation(account!, organisation, new RemoveServereDataPack()) === false)
             throw new AuthorisationError()
         
         await organisation.beforeRemove();

@@ -203,7 +203,7 @@ export class AccountResolver {
         if (!account)
             return false;
 
-        if (await accountAuthorisation(loggedAccount!, account, new RemoveServereDataPack()))
+        if (await accountAuthorisation(loggedAccount!, account, new RemoveServereDataPack()) === false)
             throw new AuthorisationError();
 
         await account.beforeRemove();
