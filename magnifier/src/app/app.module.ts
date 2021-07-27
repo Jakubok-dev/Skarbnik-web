@@ -18,6 +18,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
 import { HomeComponent } from './sites/home/home.component';
 import { OrganisationsComponent } from './sites/organisations/organisations.component';
+import { MatPaginatorModule, MatPaginatorIntl } from '@angular/material/paginator';
+import { getPolishPaginatorIntl } from './translations/paginator';
 
 @NgModule({
   declarations: [
@@ -42,8 +44,11 @@ import { OrganisationsComponent } from './sites/organisations/organisations.comp
     MatInputModule,
     FormsModule,
     ReactiveFormsModule,
+    MatPaginatorModule,
   ],
-  providers: [],
+  providers: [
+    { provide: MatPaginatorIntl, useValue: getPolishPaginatorIntl() }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,1 +1,32 @@
-<p>organisations works!</p>
+<div class="main-content">
+
+        <div class="flexbox">
+            <h1 class="title">
+                Organizacje
+            </h1>
+
+            <mat-form-field class="search">
+                <mat-icon matPrefix><fa-icon [icon]="faSearch"></fa-icon></mat-icon>
+                <input 
+                    matInput 
+                    type="search" 
+                    placeholder="Szukaj..." 
+                    class="search-input">
+            </mat-form-field>
+
+            <button 
+                mat-flat-button 
+                color="accent" 
+                class="create-organisation">(+) Dodaj</button>
+        </div>
+        
+    <mat-paginator
+        [length]="100"
+        [pageSize]="10"
+        [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+    <div class="tileflexbox">
+        <div class="tile"></div>
+        <div class="tile" *ngFor="let item of arr"></div>
+    </div>
+</div>
