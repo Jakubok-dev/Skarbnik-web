@@ -43,7 +43,7 @@ const organisationAuthorisation = async (
     )
         return authorisationPack.organisation;
 
-    throw new AuthorisationError();
+    return false;
 }
 
 @Resolver(Organisation)
@@ -77,7 +77,8 @@ export class OrganisationResolver {
                 argumentName: "id"
             });
 
-        organisationAuthorisation(account!, organisation, new SeeDataPack());
+        if (await organisationAuthorisation(account!, organisation, new SeeDataPack()) === false)
+            throw new AuthorisationError()
 
         return organisation;
     }
@@ -93,7 +94,8 @@ export class OrganisationResolver {
             description: organisationInput.description
         });
 
-        organisationAuthorisation(account!, organisation, new CreateServereDataPack());
+        if (await organisationAuthorisation(account!, organisation, new CreateServereDataPack()) === false)
+            throw new AuthorisationError()
 
         return await organisation.save();
     }
@@ -116,7 +118,8 @@ export class OrganisationResolver {
         if (update.description)
             organisation.description = update.description;
 
-        organisationAuthorisation(account!, organisation, new UpdateServereDataPack());
+        if (await organisationAuthorisation(account!, organisation, new UpdateServereDataPack()) === false)
+            throw new AuthorisationError()
 
         return await organisation.save();
     }
@@ -132,7 +135,8 @@ export class OrganisationResolver {
         if (!organisation)
             return false;
 
-        organisationAuthorisation(account!, organisation, new RemoveServereDataPack());
+        if (await organisationAuthorisation(account!, organisation, new RemoveServereDataPack()))
+            throw new AuthorisationError()
         
         await organisation.beforeRemove();
         await organisation.remove();

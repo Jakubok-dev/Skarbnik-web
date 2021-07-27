@@ -67,7 +67,7 @@ export const personAuthorisation = async (
     )
         return OWN;
     
-    throw new AuthorisationError();
+    return false;
 }
 
 @Resolver(Person)
@@ -112,7 +112,8 @@ export class PersonResolver {
                 argumentName: "id"
             });
         
-        personAuthorisation(account!, person, new SeeDataPack())
+        if (await personAuthorisation(account!, person, new SeeDataPack()) === false)
+            throw new AuthorisationError();
 
         return person;
     }
@@ -146,7 +147,8 @@ export class PersonResolver {
         });
         person.organisation = organisation.toPromise()
 
-        personAuthorisation(account!, person, new CreateServereDataPack());
+        if (await personAuthorisation(account!, person, new CreateServereDataPack()) === false)
+            throw new AuthorisationError();
         
         return await person.save();
     }
@@ -163,7 +165,8 @@ export class PersonResolver {
                 argumentName: `person.id`
             });
 
-        personAuthorisation(account!, person, new UpdateServereDataPack());
+        if (await personAuthorisation(account!, person, new UpdateServereDataPack()) === false)
+            throw new AuthorisationError();
         
         if (update.name)
             person.name = update.name;
@@ -190,7 +193,8 @@ export class PersonResolver {
         if (!person)
             return false;
 
-        personAuthorisation(account!, person, new RemoveServereDataPack());
+        if (await personAuthorisation(account!, person, new RemoveServereDataPack()) === false)
+            throw new AuthorisationError();
 
         await person.beforeRemove();
         await person.remove();

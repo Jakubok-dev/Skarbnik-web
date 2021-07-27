@@ -27,7 +27,7 @@ const setPermissionGroupAuthorisation = (
         &&
         permissionGroupToSet > invoker.permissionsManager.permissionGroup
     )
-        throw new AuthorisationError();
+        return false;
     if (invoker?.permissionsManager.hasPermission(authorisationPack.same))
         return authorisationPack.same;
 
@@ -40,11 +40,11 @@ const setPermissionGroupAuthorisation = (
         &&
         permissionGroupToSet >= invoker.permissionsManager.permissionGroup
     )
-        throw new AuthorisationError();
+        return false;
     if (invoker?.permissionsManager.hasPermission(authorisationPack.lower))
         return authorisationPack.lower;
 
-    throw new AuthorisationError();
+    return false;
 }
 
 @Resolver(PermissionsManager)
@@ -56,7 +56,8 @@ export class PermissionsManagerResolver {
         @Root() manager :PermissionsManager,
         @Ctx() { account: loggedAccount } :AppContext,
     ) {
-        accountAuthorisation(loggedAccount!, await manager.account, new SeeDataPack());
+        if (await accountAuthorisation(loggedAccount!, await manager.account, new SeeDataPack()) === false)
+            throw new AuthorisationError();
         return manager.permissions.map(el => Permission[el]);
     }
 
@@ -75,7 +76,8 @@ export class PermissionsManagerResolver {
                 argumentName: "accountID"
             });
 
-        accountAuthorisation(loggedAccount!, await account, new SeeDataPack());
+        if (await accountAuthorisation(loggedAccount!, account, new SeeDataPack()))
+            throw new AuthorisationError();
 
         const parsedPermissions :Permission[] = permission.map(el => Permission[el as keyof typeof Permission]);
 
@@ -155,7 +157,7 @@ export class PermissionsManagerResolver {
             return false;
         
         if (!account.permissionsManager.permissionGroup || account.permissionsManager.permissionGroup < getPermissionGroup(permissionGroup))
-            setPermissionGroupAuthorisation(
+            if (setPermissionGroupAuthorisation(
                 loggedAccount!,
                 account, 
                 {
@@ -163,9 +165,10 @@ export class PermissionsManagerResolver {
                     lower: Permission.ADVANCE_TO_THE_LOWER_LEVEL_WHICH_IS_ADVISOR 
                 }, 
                 getPermissionGroup(permissionGroup)
-            );
+            ) === false)
+                throw new AuthorisationError();
         else
-            setPermissionGroupAuthorisation(
+            if (setPermissionGroupAuthorisation(
                 loggedAccount!,
                 account, 
                 {
@@ -173,7 +176,8 @@ export class PermissionsManagerResolver {
                     lower: Permission.DISADVANCE_FROM_THE_LOWER_LEVEL_WHICH_IS_DISADVISOR 
                 }, 
                 getPermissionGroup(permissionGroup)
-            );
+            ) === false)
+                throw new AuthorisationError();
         
         account.permissionsManager.permissionGroup = getPermissionGroup(permissionGroup);
         account.save();

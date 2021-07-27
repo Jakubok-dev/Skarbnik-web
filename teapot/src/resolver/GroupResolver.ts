@@ -57,7 +57,7 @@ const groupAuthorisation = async (
     )
         return authorisationPack.group;
 
-    throw new AuthorisationError();
+    return false;
 }
 
 @Resolver(Group)
@@ -94,7 +94,8 @@ export class GroupResolver {
                 argumentName: "id"
             });
 
-        groupAuthorisation(account!, group, new SeeDataPack());
+        if (await groupAuthorisation(account!, group, new SeeDataPack()) === false)
+            throw new AuthorisationError();
 
         return group;
     }
@@ -123,7 +124,8 @@ export class GroupResolver {
         });
         group.organisation = organisation.toPromise();
 
-        groupAuthorisation(account!, group, new CreateServereDataPack());
+        if (await groupAuthorisation(account!, group, new CreateServereDataPack()) === false)
+            throw new AuthorisationError();
 
         return await group.save();
     }
@@ -166,7 +168,8 @@ export class GroupResolver {
             }
         }
 
-        groupAuthorisation(account!, group, new UpdateServereDataPack());
+        if (await groupAuthorisation(account!, group, new UpdateServereDataPack()) === false)
+            throw new AuthorisationError();
 
         return await group.save();
     }
@@ -182,7 +185,8 @@ export class GroupResolver {
         if (!group)
             return false;
 
-        groupAuthorisation(account!, group, new RemoveServereDataPack());
+        if (await groupAuthorisation(account!, group, new RemoveServereDataPack()) === false)
+            throw new AuthorisationError();
 
         await group.beforeRemove();
         await group.save();
@@ -208,8 +212,12 @@ export class GroupResolver {
         if ((await person.groups).filter(el => el.id === group.id).length > 0)
             return false;
 
-        groupAuthorisation(account!, group, new CreateServereDataPack());
-        personAuthorisation(account!, person, new CreateServereDataPack());
+        if (
+            await groupAuthorisation(account!, group, new CreateServereDataPack()) === false
+            ||
+            await personAuthorisation(account!, person, new CreateServereDataPack()) === false
+        )
+            throw new AuthorisationError();
 
         (await group.people).push(person);
         await group.save();
@@ -236,8 +244,12 @@ export class GroupResolver {
         if (!personInGroup)
             return false;
 
-        groupAuthorisation(account!, group, new RemoveServereDataPack());
-        personAuthorisation(account!, person, new RemoveServereDataPack());
+        if (
+            await groupAuthorisation(account!, group, new RemoveServereDataPack()) === false
+            ||
+            await personAuthorisation(account!, person, new RemoveServereDataPack()) === false
+        )
+            throw new AuthorisationError();
 
         (await group.people).splice((await group.people).indexOf(personInGroup));
         await group.save();

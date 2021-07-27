@@ -67,7 +67,7 @@ export const accountAuthorisation = async (
     )
         return authorisationPack.own;
 
-    throw new AuthorisationError();
+    return false;
 }
 
 @Resolver(Account)
@@ -85,7 +85,8 @@ export class AccountResolver {
                 argumentName: "id"
             });
 
-        accountAuthorisation(loggedAccount!, account, new SeeDataPack());
+        if (await accountAuthorisation(loggedAccount!, account, new SeeDataPack()) === false)
+            throw new AuthorisationError();
 
         return account;
     }
@@ -149,7 +150,8 @@ export class AccountResolver {
 
         account.permissionsManager.account = account.toPromise();
 
-        accountAuthorisation(loggedAccount!, account, new CreateServereDataPack());
+        if (await accountAuthorisation(loggedAccount!, account, new CreateServereDataPack()) === false)
+            throw new AuthorisationError();
         
         return await database.getRepository(Account).save(account);
     }
@@ -185,7 +187,8 @@ export class AccountResolver {
             account.person = person;
         }
 
-        accountAuthorisation(loggedAccount!, account, new UpdateServereDataPack());
+        if(await accountAuthorisation(loggedAccount!, account, new UpdateServereDataPack()) === false)
+            throw new AuthorisationError();
     
         return await account.save();
     }
@@ -200,7 +203,8 @@ export class AccountResolver {
         if (!account)
             return false;
 
-        accountAuthorisation(loggedAccount!, account, new RemoveServereDataPack());
+        if (await accountAuthorisation(loggedAccount!, account, new RemoveServereDataPack()))
+            throw new AuthorisationError();
 
         await account.beforeRemove();
         await account.remove();
