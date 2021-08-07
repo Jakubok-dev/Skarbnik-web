@@ -18,6 +18,7 @@ import { getCorsOrigins } from "./startup/getCorsOrigins";
 import { seedDatabase } from "./startup/seedDatabase";
 import { LoggingManager } from "./logging/loggingManager";
 import { GroupResolver } from "./resolver/GroupResolver";
+import { Organisation } from "./entity/Organisation";
 
 dotenv.config();
 export let applogger :Logger;

@@ -1,5 +1,5 @@
 import { Authenticate } from "../middleware/authenticate";
-import { Arg, Ctx, Field, InputType, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
+import { Arg, Ctx, Field, InputType, Int, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { Organisation } from "../entity/Organisation";
 import { database } from "../app";
 import { UserInputError } from "apollo-server-express";
@@ -53,13 +53,73 @@ export class OrganisationResolver {
     @Query(() => [Organisation])
     async organisations(
         @Ctx() { account } :AppContext,
+        @Arg(`alphabetical`, { nullable: true }) alphabetical ?:boolean,
+        @Arg(`limit`, () => Int, { nullable: true }) limit ?:number,
+        @Arg(`cursor`, () => Int, { nullable: true }) cursor ?:number,
+        @Arg(`contains`, { nullable: true }) contains ?:string,
     ) {
+        contains ? contains : contains = "";
+        contains = `%${contains.split(` `).join(`%`)}%`;
+
+        if (account?.permissionsManager.hasPermission(Permission.SEE_EVERYONES_DATA)) {
+            if (!alphabetical)
+                return (await database.getRepository(Organisation)
+                .createQueryBuilder()
+                .where(`Organisation.name LIKE '${contains}'`)
+                .limit(limit)
+                .getMany())
+                .splice(cursor ? cursor : 0);
+
+            return (await database.getRepository(Organisation)
+            .createQueryBuilder()
+            .where(`Organisation.name LIKE '${contains}'`)
+            .orderBy("name")
+            .limit(limit)
+            .getMany())
+            .splice(cursor ? cursor : 0);
+        }
+
+        if (account?.permissionsManager.hasPermission(Permission.SEE_PEOPLES_IN_THE_SAME_ORGANISATION_DATA)) {
+            if (!alphabetical)
+                return (await database.getRepository(Organisation)
+                .createQueryBuilder()
+                .where(`Organisation.name LIKE '${contains}'`, { id: (await account.person.organisation).id })
+                .limit(limit)
+                .getMany())
+                .splice(cursor ? cursor : 0);
+
+            return (await database.getRepository(Organisation)
+            .createQueryBuilder()
+            .where(`Organisation.name LIKE '${contains}'`, { id: (await account.person.organisation).id })
+            .orderBy("name")
+            .limit(limit)
+            .getMany())
+            .splice(cursor ? cursor : 0);
+        }
+
+        throw new AuthorisationError();
+    }
+
+    @UseMiddleware(Authenticate)
+    @Query(() => Int)
+    async organisationsCount(
+        @Ctx() { account } :AppContext,
+        @Arg(`contains`, { nullable: true }) contains ?:string,
+    ) {
+        contains ? contains : contains = "";
+        contains = `%${contains.split(` `).join(`%`)}%`;
 
         if (account?.permissionsManager.hasPermission(Permission.SEE_EVERYONES_DATA))
-            return await database.getRepository(Organisation).find();
-        
+            return await database.getRepository(Organisation)
+            .createQueryBuilder()
+            .where(`Organisation.name LIKE '${contains}'`)
+            .getCount();
+
         if (account?.permissionsManager.hasPermission(Permission.SEE_PEOPLES_IN_THE_SAME_ORGANISATION_DATA))
-            return await database.getRepository(Organisation).find({ where: { id: (await account.person.organisation).id } });
+            return await database.getRepository(Organisation)
+            .createQueryBuilder()
+            .where(`Organisation.name LIKE '${contains}'`, { id: (await account.person.organisation).id })
+            .getCount();
 
         throw new AuthorisationError();
     }

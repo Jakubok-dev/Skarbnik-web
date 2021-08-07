@@ -4,15 +4,17 @@
             <h1 class="title">
                 Organizacje
             </h1>
-
-            <mat-form-field class="search">
-                <mat-icon matPrefix><fa-icon [icon]="faSearch"></fa-icon></mat-icon>
-                <input 
-                    matInput 
-                    type="search" 
-                    placeholder="Szukaj..." 
-                    class="search-input">
-            </mat-form-field>
+            <form [formGroup]="searchForm" class="search">
+                <mat-form-field class="searchBox">
+                    <mat-icon matPrefix><fa-icon [icon]="faSearch"></fa-icon></mat-icon>
+                    <input 
+                        matInput 
+                        type="search" 
+                        placeholder="Szukaj..." 
+                        class="search-input"
+                        formControlName="textBox">
+                </mat-form-field>
+            </form>
 
             <button 
                 mat-flat-button 
@@ -21,12 +23,15 @@
         </div>
         
     <mat-paginator
-        [length]="100"
+        #paginator
+        [length]="organisationsCount"
         [pageSize]="10"
-        [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        (page)="getServerData($event)"></mat-paginator>
 
     <div class="tileflexbox">
-        <div class="tile"></div>
-        <div class="tile" *ngFor="let item of arr"></div>
+        <div class="tile" *ngFor="let item of organisations">
+            {{ item.name }}
+        </div>
     </div>
 </div>

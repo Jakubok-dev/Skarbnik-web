@@ -1,5 +1,5 @@
 import { Field, ObjectType } from "type-graphql";
-import { Column, Entity, OneToMany } from "typeorm";
+import { Column, Entity, Index, OneToMany } from "typeorm";
 import { AppBaseEntity } from "./AppBaseEntity";
 import { Group } from "./Group";
 import { Person } from "./Person";
@@ -8,6 +8,7 @@ import { Person } from "./Person";
 @Entity()
 export class Organisation extends AppBaseEntity {
 
+    @Index({ unique: false })
     @Field()
     @Column(`text`, { unique: true })
     name :string;

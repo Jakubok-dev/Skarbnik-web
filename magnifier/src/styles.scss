@@ -41,13 +41,16 @@ html, body { height: 100%; }
 .tile {
   display: inline-block;
   background-color: mat.get-color-from-palette($magnifier-primary, 500);
+  color: $white;
   min-width: 100px;
   width: fit-content;
-  min-height: 100px;
   height: fit-content;
   border-radius: 10px;
-  padding: 10px;
+  padding: 50px 32px;
   margin: 10px;
+  font-size: 1.8em;
+  text-align: center;
+  cursor: pointer;
 }
 
 .main-content {
